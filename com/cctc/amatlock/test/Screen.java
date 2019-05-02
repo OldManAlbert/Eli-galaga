@@ -1,7 +1,5 @@
 package com.cctc.amatlock.test;
 
-import com.cctc.amatlock.test.utilities.ResourceLoader;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
@@ -20,7 +18,7 @@ public class Screen extends Canvas implements Runnable
     private Thread thread;  // Don't worry about what this is.
 
     public Galaga galaga;
-    public Powers powers;
+    public Power power;
     public Opponent baddie;
 
     public static Screen getInstance()
@@ -60,6 +58,11 @@ public class Screen extends Canvas implements Runnable
     public void drawForeground(Graphics g)
     {
         galaga.render(g);
+        baddie.render(g);
+        for(int i=0; i < objectCounter; i++)
+        {
+            coreObjects[i].render(g);
+        }
     }
 
     public void render()
@@ -85,8 +88,11 @@ public class Screen extends Canvas implements Runnable
     public void tick()
     {
         galaga.tick();
-        powers.tick();
-        baddie.tick();
+        power.tick();
+        for(int i=0; i < objectCounter; i++)
+        {
+            coreObjects[i].tick();
+        }
     }
 
     /**
@@ -100,8 +106,18 @@ public class Screen extends Canvas implements Runnable
         this.addKeyListener(keyInput);
 
         galaga = new Galaga(Reference.CENTER_X, Reference.HEIGHT -50,30,50, Color.BLUE);
-        powers = new Powers(0,0,10,12, Color.RED);
+        power = new Power(0,0,10,12, Color.RED);
+
         baddie = new Opponent(Reference.CENTER_X, Reference.CENTER_Y - 40,20, 20, Color.RED );
+
+        int x=10;
+        int y=10;
+        for (int i=0; i < 20; i++)
+        {
+            coreObjects[i] = new Opponent(x, y,10, 10, Color.RED );
+            objectCounter++;
+            x+=40;
+        }
     }
 
     @Override

@@ -4,6 +4,8 @@ import java.awt.*;
 
 public class Galaga extends CoreObject
 {
+    private Power[] powers = new Power[1000];
+    private int powerCounter = 0;
 
     /**
      * Creates the core object. All subclasses
@@ -26,11 +28,33 @@ public class Galaga extends CoreObject
     {
         x += velX;
         y += velY;
+        for (int i=0; i<powerCounter; i++)
+        {
+            powers[i].tick();
+        }
     }
 
     @Override
     public void render(Graphics g) {
         g.setColor(color);
         g.fillRect(x,y,width,height);
+        for (int i=0; i<powerCounter; i++)
+        {
+            powers[i].render(g);
+        }
+    }
+
+    public void shoot()
+    {
+        Power power = new Power(x, y, 5, 15, Color.YELLOW, true);
+        power.setVelY( - 2.5 );
+
+        powers[powerCounter] = power;
+        powerCounter++;
+
+        if (powerCounter>=1000)
+        {
+            powerCounter=0;
+        }
     }
 }
